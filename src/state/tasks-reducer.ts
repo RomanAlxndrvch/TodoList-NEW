@@ -1,6 +1,5 @@
 import {TasksStateType} from '../App';
-import {v1} from 'uuid';
-import {AddTodolistActionType, RemoveTodolistActionType, setTodoListsAC} from './todolists-reducer';
+import {addTodolistAC, RemoveTodolistActionType, setTodoListsAC} from './todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI} from '../api/todolists-api'
 import {AppDispatch} from "./store";
 
@@ -32,7 +31,7 @@ export type ChangeTaskTitleActionType = {
 export type TasksActionsType = RemoveTaskActionType | AddTaskActionType
     | ChangeTaskStatusActionType
     | ChangeTaskTitleActionType
-    | AddTodolistActionType
+    | ReturnType<typeof addTodolistAC>
     | RemoveTodolistActionType
     | ReturnType<typeof setTodoListsAC>
     | ReturnType<typeof setTasksAC>
@@ -84,7 +83,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Tasks
         case 'ADD-TODOLIST': {
             return {
                 ...state,
-                [action.todolistId]: []
+                [action.todoList.id]: []
             }
         }
         case 'REMOVE-TODOLIST': {
@@ -131,7 +130,6 @@ export const setTasksAC = (tasks: Array<TaskType>, todoListID: string) => {
 
 export const setTasksTC = (todoListId: string) => (dispatch: AppDispatch) => {
     todolistsAPI.getTasks(todoListId).then(res => {
-        console.log(res.data.items)
         dispatch(setTasksAC(res.data.items, todoListId))
     })
 }
@@ -146,4 +144,8 @@ export const addTaskTC = (todoListId: string, title: string) => (dispatch: AppDi
     todolistsAPI.createTask(todoListId, title).then(res => {
         dispatch(addTaskAC(res.data.data.item))
     })
+}
+
+export const changeTaskStatusTC = () => (dispatch: AppDispatch) => {
+
 }
