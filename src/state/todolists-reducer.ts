@@ -63,7 +63,7 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             return [...state]
         }
         case "SET-TODOLISTS": {
-            return action.todoLists.map(el => ({...el, filter: "active"}))
+            return action.todoLists.map(el => ({...el, filter: "all"}))
         }
         default:
             return state;
