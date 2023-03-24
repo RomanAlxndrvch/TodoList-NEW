@@ -8,13 +8,16 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
+import {useAppDispatch} from "../../app/store";
+import {loginTC} from "./login-reducer";
 
 export const Login = () => {
-
+    const dispatch = useAppDispatch()
     const formik = useFormik({
         validate: (values) => {
             if (!values.email) return ({email: 'Email is required'})
             if (!values.password) return ({password: 'Password is required'})
+            if (values.password.length <= 3) return ({password: 'Password to short'})
         },
         initialValues: {
             email: '',
@@ -22,7 +25,7 @@ export const Login = () => {
             rememberMe: false
         },
         onSubmit: values => {
-            alert(JSON.stringify(values));
+            dispatch(loginTC(values))
         },
     })
 
@@ -50,6 +53,7 @@ export const Login = () => {
                         <TextField type="password" label="Password"
                                    margin="normal"
                                    {...formik.getFieldProps('password')}
+                                   error={!!formik.errors.password}
 
                         />
 
