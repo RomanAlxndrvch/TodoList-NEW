@@ -4,6 +4,7 @@ import { AnyAction, applyMiddleware, combineReducers, createStore } from 'redux'
 import thunkMiddleware, { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import {appReducer} from './app-reducer'
 import {authReducer} from 'features/Login/auth-reducer'
+import {configureStore} from "@reduxjs/toolkit";
 
 
 const rootReducer = combineReducers({
@@ -13,9 +14,11 @@ const rootReducer = combineReducers({
     auth: authReducer
 })
 // непосредственно создаём store
-export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+/*export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));*/
+export const store = configureStore({reducer:rootReducer})
+
 // определить автоматически тип всего объекта состояния
-export type AppRootStateType = ReturnType<typeof rootReducer>
+export type AppRootStateType = ReturnType<typeof store.getState>
 
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AnyAction>
 
