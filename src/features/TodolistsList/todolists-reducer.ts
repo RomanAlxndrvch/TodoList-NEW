@@ -10,7 +10,7 @@ const initialState: Array<TodolistDomainType> = []
 export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: ActionsType): Array<TodolistDomainType> => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
-            return state.filter(tl => tl.id != action.id)
+            return state.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
             return [{...action.todolist, filter: 'all', entityStatus: 'idle'}, ...state]
 
@@ -33,11 +33,37 @@ const slice = createSlice({
     initialState: [] as TodolistDomainType[],
     reducers: {
         removeTodoList: (state, action: PayloadAction<{ id: string }>) => {
-            return state.filter(el => el.id !== action.payload.id)
+            /*      return state.filter(el => el.id !== action.payload.id)*/
+
+            const index = state.findIndex(todo => action.payload.id === todo.id)
+            state.splice(index, 1)
         },
         addTodoList: (state, action: PayloadAction<{ todoList: TodolistType }>) => {
             state.unshift({...action.payload.todoList, filter: 'all', entityStatus: 'idle'})
+        },
+        changeTodoListEntityStatus: (state, action: PayloadAction<{ id: string, status: RequestStatusType }>) => {
+            const index = state.findIndex(todo => action.payload.id === todo.id)
+            state[index].entityStatus = action.payload.status
+        },
+        changeTodoListTitle: (state, action: PayloadAction<{ id: string, title: string }>) => {
+            const index = state.findIndex(todo => action.payload.id === todo.id)
+            state[index].title = action.payload.title
+        },
+        changeTodoListFilter: (state, action: PayloadAction<{ id: string, filter: FilterValuesType }>) => {
+            const index = state.findIndex(todo => action.payload.id === todo.id)
+            state[index].filter = action.payload.filter
+        },
+        setTodoLists: (state, action: PayloadAction<{ todoLists: TodolistType[] }>) => {
+
+            /*  action.payload.todoLists.forEach((tl) => {
+                  state.push({ ...tl, filter: "all", entityStatus: "idle" })
+              })*/
+
+            return action.payload.todoLists.map(el => ({...el, filter: 'all', entityStatus: 'idle'}))
+
         }
+
+
     }
 })
 
