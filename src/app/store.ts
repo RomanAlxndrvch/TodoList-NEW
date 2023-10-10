@@ -11,14 +11,21 @@ import {appReducer} from './app-reducer';
 import {authReducer} from 'features/Login/auth-reducer';
 import {configureStore} from '@reduxjs/toolkit';
 
-const rootReducer = combineReducers({
+/*const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todoListReducer,
     app: appReducer,
     auth: authReducer,
-});
+});*/
 
-export const store = configureStore({reducer: rootReducer});
+export const store = configureStore({
+    reducer: {
+        tasks: tasksReducer,
+        todolists: todoListReducer,
+        app: appReducer,
+        auth: authReducer,
+    }
+});
 export type AppRootStateType = ReturnType<typeof store.getState>;
 
 export type AppThunk<ReturnType = void> = ThunkAction<
