@@ -125,6 +125,52 @@ export const removeTaskTC =
     })
   }
 
+const updateTask = createAppAsyncThunk<
+  {
+    taskId: string
+    domainModel: UpdateDomainTaskModelType
+    todolistId: string
+  },
+  {
+    taskId: string
+    domainModel: UpdateDomainTaskModelType
+    todolistId: string
+  }
+>(`${slice.name}/updateTask`, (arg, thunkAPI) => {
+  const { dispatch, rejectWithValue, getState } = thunkAPI
+  try {
+    const state = getState()
+    const task = state.tasks[arg.todolistId].find((t) => t.id === arg.taskId)
+    if (!task) {
+      //throw new Error("task not found in the state");
+      console.warn("task not found in the state")
+      return
+    }
+
+    const apiModel: UpdateTaskModelType = {
+      deadline: task.deadline,
+      description: task.description,
+      priority: task.priority,
+      startDate: task.startDate,
+      title: task.title,
+      status: task.status,
+      ...arg.domainModel,
+    }
+
+    todolistsAPI.updateTask(arg.todolistId, arg.taskId, apiModel).then((res) => {
+      if (res.data.resultCode === 0) {
+        return { taskId: arg.taskId, model: arg.domainModel, todolistId: arg.todolistId }
+      } else {
+        handleServerAppError(res.data, dispatch)
+        return rejectWithValue(null)
+      }
+    })
+  } catch (e) {
+    handleServerNetworkError(e, dispatch)
+    return rejectWithValue(null)
+  }
+})
+
 export const updateTaskTC =
   (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string): AppThunk =>
   (dispatch, getState) => {
@@ -175,4 +221,4 @@ export type TasksStateType = {
 
 export const tasksReducer = slice.reducer
 export const tasksActions = slice.actions
-export const taskThunks = { fetchTasks, addTask }
+export const taskThunks = { fetchTasks, addTask, updateTask }
