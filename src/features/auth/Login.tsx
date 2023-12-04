@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField } from "@mui/material";
-import { loginTC } from "features/auth/auth.reducer";
+import { authThunk } from "features/auth/auth.reducer";
 import { useAppDispatch } from "common/hooks";
 import { selectIsLoggedIn } from "features/auth/auth.selectors";
 
@@ -31,7 +31,7 @@ export const Login = () => {
       rememberMe: false,
     },
     onSubmit: (values) => {
-      dispatch(loginTC(values));
+      dispatch(authThunk.login(values));
     },
   });
 
