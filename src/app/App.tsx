@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-import { initializeAppTC } from "app/app.reducer";
 import { Login } from "features/auth/Login";
 import { authThunk } from "features/auth/auth.reducer";
 import "./App.css";

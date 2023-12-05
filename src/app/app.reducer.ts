@@ -32,35 +32,12 @@ const slice = createSlice({
 export const appReducer = slice.reducer;
 export const appActions = slice.actions;
 
-export const initializeAppTC = () => (dispatch: Dispatch) => {
-  authAPI.me().then((res) => {
-    if (res.data.resultCode === 0) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-    } else {
-    }
-
-    dispatch(appActions.setAppInitialized({ isInitialized: true }));
-  });
-};
-
-const initializeApp = createAppAsyncThunk<
-  {
-    isInitialized: boolean;
-  },
-  undefined
->(`${slice.name}/initializeApp`, async (_, thunkAPI) => {
-  const { dispatch, rejectWithValue } = thunkAPI;
-
-  try {
-    const res = await authAPI.me();
-    if (res.data.resultCode === 0) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-      return rejectWithValue(null);
-    } else {
-      return { isInitialized: true };
-    }
-  } catch (e) {
-    handleServerNetworkError(e, dispatch);
-    return rejectWithValue(null);
-  }
-});
+// export const initializeAppTC = () => (dispatch: Dispatch) => {
+//   authAPI.me().then((res) => {
+//     if (res.data.resultCode === 0) {
+//       dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+//     } else {
+//     }
+//     dispatch(appActions.setAppInitialized({ isInitialized: true }));
+//   });
+// };
