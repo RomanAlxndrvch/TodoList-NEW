@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import { authActions } from "features/auth/auth.reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authAPI } from "features/auth/auth.api";
+import { createAppAsyncThunk, handleServerNetworkError } from "common/utils/index";
 
 const initialState = {
   status: "idle" as RequestStatusType,
@@ -41,3 +42,25 @@ export const initializeAppTC = () => (dispatch: Dispatch) => {
     dispatch(appActions.setAppInitialized({ isInitialized: true }));
   });
 };
+
+const initializeApp = createAppAsyncThunk<
+  {
+    isInitialized: boolean;
+  },
+  undefined
+>(`${slice.name}/initializeApp`, async (_, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
+
+  try {
+    const res = await authAPI.me();
+    if (res.data.resultCode === 0) {
+      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+      return rejectWithValue(null);
+    } else {
+      return { isInitialized: true };
+    }
+  } catch (e) {
+    handleServerNetworkError(e, dispatch);
+    return rejectWithValue(null);
+  }
+});

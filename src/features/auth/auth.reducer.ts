@@ -51,7 +51,12 @@ const login = createAppAsyncThunk<
   }
 });
 
-const logout = createAppAsyncThunk<{ isLoggedIn: boolean }>(`${slice.name}/logout`, async (arg, thunkAPI) => {
+const logout = createAppAsyncThunk<
+  {
+    isLoggedIn: boolean;
+  },
+  undefined
+>(`${slice.name}/logout`, async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
   try {
     const res = await authAPI.logout();
