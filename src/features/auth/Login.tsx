@@ -31,7 +31,9 @@ export const Login = () => {
       rememberMe: false,
     },
     onSubmit: (values) => {
-      dispatch(authThunk.login(values));
+      dispatch(authThunk.login(values)).then((res) => {
+        console.log(res);
+      });
     },
   });
 

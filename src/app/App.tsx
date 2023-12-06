@@ -29,7 +29,7 @@ function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(initializeAppTC());
+    dispatch(authThunk.initializeApp());
   }, []);
 
   const logoutHandler = useCallback(() => {

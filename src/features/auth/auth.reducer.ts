@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk } from "app/store";
+import { createSlice } from "@reduxjs/toolkit";
 import { appActions } from "app/app.reducer";
 import { authAPI, LoginParamsType } from "features/auth/auth.api";
 import { clearTasksAndTodolists } from "common/actions";
@@ -84,7 +83,6 @@ const initializeApp = createAppAsyncThunk<
   undefined
 >(`${slice.name}/initializeApp`, async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-
   try {
     const res = await authAPI.me();
     if (res.data.resultCode === 0) {
