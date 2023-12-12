@@ -3,6 +3,7 @@ import { appActions } from "app/app.reducer";
 import { authAPI, LoginParamsType } from "features/auth/auth.api";
 import { clearTasksAndTodolists } from "common/actions";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
+import { BaseResponseType } from "common/types/index";
 
 const slice = createSlice({
   name: "auth",
@@ -45,7 +46,7 @@ const login = createAppAsyncThunk<
       return { isLoggedIn: true };
     } else {
       handleServerAppError(res.data, dispatch);
-      return rejectWithValue(null);
+      return rejectWithValue(res.data);
     }
   } catch (err) {
     handleServerNetworkError(err, dispatch);
