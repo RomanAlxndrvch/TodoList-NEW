@@ -3,7 +3,6 @@ import { appActions } from "app/app.reducer";
 import { authAPI, LoginParamsType } from "features/auth/auth.api";
 import { clearTasksAndTodolists } from "common/actions";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
-import { BaseResponseType } from "common/types/index";
 
 const slice = createSlice({
   name: "auth",
@@ -45,7 +44,8 @@ const login = createAppAsyncThunk<
       dispatch(appActions.setAppStatus({ status: "succeeded" }));
       return { isLoggedIn: true };
     } else {
-      handleServerAppError(res.data, dispatch);
+      const isShowError = !res.data.fieldsErrors.length;
+      handleServerAppError(res.data, dispatch, isShowError);
       return rejectWithValue(res.data);
     }
   } catch (err) {

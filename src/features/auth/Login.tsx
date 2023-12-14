@@ -7,7 +7,6 @@ import { authThunk } from "features/auth/auth.reducer";
 import { useAppDispatch } from "common/hooks";
 import { selectIsLoggedIn } from "features/auth/auth.selectors";
 import { BaseResponseType } from "common/types/index";
-import { LoginParamsType } from "features/auth/auth.api";
 
 type FormValues = {
   email: string;
@@ -42,7 +41,7 @@ export const Login = () => {
       dispatch(authThunk.login(values))
         .unwrap()
         .catch((err: BaseResponseType) => {
-          err.fieldsErrors.forEach((fieldError) => {
+          err.fieldsErrors?.forEach((fieldError) => {
             formikHelpers.setFieldError(fieldError.field, fieldError.error);
           });
         });
