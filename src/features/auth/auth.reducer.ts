@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { appActions } from "app/app.reducer";
 import { authAPI, LoginParamsType } from "features/auth/auth.api";
 import { clearTasksAndTodolists } from "common/actions";
-import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
+import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError, thunkTryCatch } from "common/utils";
+import { todolistsApi } from "features/TodolistsList/todolists.api";
+import { ResultCode } from "common/enums/index";
 
 const slice = createSlice({
   name: "auth",
@@ -77,6 +79,28 @@ const logout = createAppAsyncThunk<
   }
 });
 
+// const _initializeApp = createAppAsyncThunk<
+//   {
+//     isLoggedIn: boolean;
+//   },
+//   undefined
+// >(`${slice.name}/initializeApp`, async (_, thunkAPI) => {
+//   const { dispatch, rejectWithValue } = thunkAPI;
+//   try {
+//     const res = await authAPI.me();
+//     if (res.data.resultCode === 0) {
+//       return { isLoggedIn: true };
+//     } else {
+//       return rejectWithValue(null);
+//     }
+//   } catch (e) {
+//     handleServerNetworkError(e, dispatch);
+//     return rejectWithValue(null);
+//   } finally {
+//     dispatch(appActions.setAppInitialized({ isInitialized: true }));
+//   }
+// });
+
 const initializeApp = createAppAsyncThunk<
   {
     isLoggedIn: boolean;
@@ -84,19 +108,16 @@ const initializeApp = createAppAsyncThunk<
   undefined
 >(`${slice.name}/initializeApp`, async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  try {
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await authAPI.me();
     if (res.data.resultCode === 0) {
       return { isLoggedIn: true };
     } else {
       return rejectWithValue(null);
     }
-  } catch (e) {
-    handleServerNetworkError(e, dispatch);
-    return rejectWithValue(null);
-  } finally {
+  }).finally(() => {
     dispatch(appActions.setAppInitialized({ isInitialized: true }));
-  }
+  });
 });
 
 export const authReducer = slice.reducer;
